@@ -3,7 +3,7 @@ defmodule Swoosh.Attachment do
   Struct representing an attachment in an email.
   """
 
-  defstruct filename: nil, content_type: nil, path: nil
+  defstruct filename: nil, content_type: nil, path: nil, file_content: nil
 
   @type t :: %__MODULE__{}
 
@@ -42,6 +42,11 @@ defmodule Swoosh.Attachment do
   def new(path, opts) do
     filename = opts[:filename] || Path.basename(path)
     content_type = opts[:content_type] || MIME.from_path(path)
-    %__MODULE__{path: path, filename: filename, content_type: content_type}
+    file_content = opts[:file_content] || nil
+    if is_nil(file_content) do
+      %__MODULE__{path: path, filename: filename, content_type: content_type}
+    else
+      %__MODULE__{path: path, filename: filename, file_content: file_content, content_type: content_type}
+    end
   end
 end
